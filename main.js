@@ -1,7 +1,7 @@
 import './assets/scss/all.scss';
 import 'bootstrap/dist/js/bootstrap.min.js';
-
-console.log("Hello world!");
+import './assets/js/index.js';
+import './assets/js/admin-index.js';
 
 // C3.js
 let chart = c3.generate({
@@ -22,3 +22,5 @@ let chart = c3.generate({
         }
     },
 });
+
+// 前台
