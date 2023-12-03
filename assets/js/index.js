@@ -15,16 +15,7 @@ const orderInfoInputWrap = document.querySelectorAll(".orderInfo-inputWrap"); //
 
 
 // 連接 api 資料
-// 取得產品列表
-function getProductList() {
-    axios.get(`${api_url}/${api_path}/products`)
-        .then(function (res) {
-            console.log(res.data);
-        })
-        .catch(function (error) {
-            console.log(error.response.data);
-        })
-}
+
 
 //取得購物車列表
 function getCartList() {
@@ -97,6 +88,38 @@ function sendBuyOrder() {
 }
 
 // 渲染 html 內容
+const api_url = "https://livejs-api.hexschool.io/api/livejs/v1/customer";
+const api_path = "rxzan";
+const token = "qBHJXrpBrwdkIMnsz1kD5HcDZrB3";
+
+
+// 取得產品列表
+function getProductList() {
+    axios.get(`${api_url}/${api_path}/products`)
+        .then(function (res) {
+            let products = res.data.products;
+            products.forEach((i) => {
+                productWrap.innerHTML += `
+                <li class="productCard">
+                <h4 class="productType">${i.category}</h4>
+                <img
+                src="${i.images}"
+                alt=""
+                />
+                <a href="#" class="addCardBtn">加入購物車</a>
+                <h3>${i.title}</h3>
+                <del class="originPrice">NT$${i.origin_price}</del>
+                <p class="nowPrice">NT$${i.price}</p>
+                </li>
+                `;
+            });
+        })
+        .catch(function (error) {
+            console.log(error.response.data);
+        })
+}
+
+
 getProductList();
 
 // 新增資料
