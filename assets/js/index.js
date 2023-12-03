@@ -17,16 +17,7 @@ const orderInfoInputWrap = document.querySelectorAll(".orderInfo-inputWrap"); //
 // 連接 api 資料
 
 
-//取得購物車列表
-function getCartList() {
-    axios.get(`${api_url}/${api_path}/carts`)
-        .then(function (res) {
-            console.log(res.data);
-        })
-        .catch(function (error) {
-            console.log(error.response.data);
-        })
-}
+
 
 //加入購物車 //*是否需要以 productId 為帶入參數? (範例沒有)
 function addCart(productId, quantity) {
@@ -93,8 +84,8 @@ const api_path = "rxzan";
 const token = "qBHJXrpBrwdkIMnsz1kD5HcDZrB3";
 
 
-// 取得產品列表
-function getProductList() {
+// 渲染產品列表
+function renderProductList() {
     axios.get(`${api_url}/${api_path}/products`)
         .then(function (res) {
             let products = res.data.products;
@@ -108,8 +99,8 @@ function getProductList() {
                 />
                 <a href="#" class="addCardBtn">加入購物車</a>
                 <h3>${i.title}</h3>
-                <del class="originPrice">NT$${i.origin_price}</del>
-                <p class="nowPrice">NT$${i.price}</p>
+                <del class="originPrice">NT$${new Intl.NumberFormat('en-IN').format(i.origin_price)}</del>
+                <p class="nowPrice">NT$${new Intl.NumberFormat('en-IN').format(i.price)}</p>
                 </li>
                 `;
             });
@@ -119,9 +110,65 @@ function getProductList() {
         })
 }
 
+//取得購物車列表
+function getCartList() {
+    axios.get(`${api_url}/${api_path}/carts`)
+        .then(function (res) {
 
-getProductList();
+            let carts = res.data.carts;
+            let renderCartItem = ``;
+            let sumPrice = 0;
+            carts.forEach((i) => {
+                renderCartItem += `
+                <tr>
+                    <td>
+                        <div class="cardItem-title">
+                            <img src="${i.product.images}" alt="" />
+                            <p>${i.product.title}</p>
+                        </div>
+                    </td>
+                    <td>NT$${new Intl.NumberFormat('en-IN').format(i.product.price)}</td>
+                    <td>${i.quantity}</td>
+                    <td>NT$${new Intl.NumberFormat('en-IN').format((i.product.price * i.quantity))}</td>
+                    <td class="discardBtn">
+                        <a href="#" class="material-icons"> clear </a>
+                    </td>
+                </tr>
+                `;
+                sumPrice += (i.product.price * i.quantity);
+            });
 
+            shoppingCartTable.innerHTML = `
+            <table class="shoppingCart-table">
+                <tr>
+                    <th width="40%">品項</th>
+                    <th width="15%">單價</th>
+                    <th width="15%">數量</th>
+                    <th width="15%">金額</th>
+                    <th width="15%"></th>
+                </tr>
+                ${renderCartItem}
+                <tr>
+                    <td>
+                        <a href="#" class="discardAllBtn">刪除所有品項</a>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <p>總金額</p>
+                    </td>
+                    <td>NT$${new Intl.NumberFormat('en-IN').format(sumPrice)}</td>
+                </tr>
+            </table>
+            `;
+        })
+        .catch(function (error) {
+            console.log(error.response.data);
+        })
+}
+
+renderProductList();
+getCartList();
 // 新增資料
 
 // 刪除資料

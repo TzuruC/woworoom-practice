@@ -1,5 +1,3 @@
-console.log("後台");
-
 // 連接 html 框架
 
 //  - C3 表格
@@ -23,5 +21,26 @@ let chart = c3.generate({
 });
 
 //  - 訂單資料
-// const discardAllBtn = document.querySelector(".discardAllBtn"); // 刪除全部訂單 // 與刪除所有購物車內容重複宣告
+const discardAllBtn = document.querySelector(".discardAllBtn"); // 刪除全部訂單 // 與刪除所有購物車內容重複宣告
 const orderPageTable = document.querySelector(".orderPage-table"); // 渲染收到訂單資料
+
+const api_url = "https://livejs-api.hexschool.io/api/livejs/v1/customer";
+const api_path = "rxzan";
+const token = "qBHJXrpBrwdkIMnsz1kD5HcDZrB3";
+
+
+// 連接 api 資料
+// 取得訂單列表
+function getOrderList() {
+    axios.get(`${api_url}/${api_path}/orders`, {
+        headers: {
+            "authorization": token
+        }
+    })
+        .then(function (res) {
+            console.log(res.data);
+        })
+        .catch(function (error) {
+            console.log(error.response.data);
+        })
+}
