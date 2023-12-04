@@ -100,6 +100,10 @@ function renderProductList() {
                 </li>
                 `;
             });
+            console.log(addCardBtn);
+        })
+        .then(function(res){
+            
         })
         .catch(function (error) {
             console.log(error.response.data);
@@ -165,6 +169,22 @@ function getCartList() {
 
 renderProductList();
 getCartList();
+
 // 新增資料
+// - 加入購物車
+function addToCart(productId, quantity){
+    axios.post( `${api_url}/${api_path}/carts`, {
+        "data": {
+            "productId": productId,
+            "quantity": 1
+        }
+      })
+      .then(function (res) {
+        console.log(res.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+}
 
 // 刪除資料
