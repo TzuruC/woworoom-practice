@@ -39,15 +39,9 @@ function renderOrderList() {
         }
     })
         .then(function (res) {
-            console.log(res.data.orders[0].products);
             let renderOrderItem = ``;
             let orders = res.data.orders;
-            function renderOrderProducts(orderer) {
-                let orderProducts = res.data.orderer.products;
-                orderProducts.forEach((i) => {
-                    return i.title;
-                });
-            }
+            console.log(orders);
 
             orders.forEach((i) => {
                 renderOrderItem += `
@@ -60,7 +54,9 @@ function renderOrderList() {
                     <td>${i.user.address}</td>
                     <td>${i.user.email}</td>
                     <td>
-                        <p>${renderOrderProducts(i)}</p>
+                        <p>
+                        ${i.products.map((e)=> e.title + "*" + e.quantity).join('</br>')}
+                        </p>
                     </td>
                     <td>${transDate(i.updatedAt)}</td>
                     <td class="orderStatus">

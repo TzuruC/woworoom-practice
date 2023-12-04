@@ -1,4 +1,3 @@
-import './assets/scss/all.scss';
-import 'bootstrap/dist/js/bootstrap.min.js';
+import '/assets/scss/all.scss';
 
 // test notebook win8 1204

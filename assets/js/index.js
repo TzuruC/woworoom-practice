@@ -15,10 +15,6 @@ const orderInfoInputWrap = document.querySelectorAll(".orderInfo-inputWrap"); //
 
 
 // 連接 api 資料
-
-
-
-
 //加入購物車 //*是否需要以 productId 為帶入參數? (範例沒有)
 function addCart(productId, quantity) {
     axios.post(`${api_url}/${api_path}/carts`, {
