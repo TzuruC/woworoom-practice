@@ -85,8 +85,9 @@ function renderProductList() {
     axios.get(`${api_url}/${api_path}/products`)
         .then(function (res) {
             let products = res.data.products;
+            let str = "";
             products.forEach((i) => {
-                productWrap.innerHTML += `
+                str += `
                 <li class="productCard">
                 <h4 class="productType">${i.category}</h4>
                 <img
@@ -100,15 +101,43 @@ function renderProductList() {
                 </li>
                 `;
             });
-            console.log(addCardBtn);
+            productWrap.innerHTML = str;
         })
-        .then(function(res){
-            
+        .then(function (res) {
+
         })
         .catch(function (error) {
             console.log(error.response.data);
         })
 }
+
+//  - 篩選功能
+productSelect.addEventListener('change', (e) => {
+    const category = e.target.value;
+    if (category == "全部") {
+        renderProductList();
+        return;
+    }
+    let str = "";
+    products.forEach((i) => {
+        if (i.category == category) {
+            str += `
+                <li class="productCard">
+                <h4 class="productType">${i.category}</h4>
+                <img
+                src="${i.images}"
+                alt=""
+                />
+                <a href="#" class="addCardBtn">加入購物車</a>
+                <h3>${i.title}</h3>
+                <del class="originPrice">NT$${new Intl.NumberFormat('en-IN').format(i.origin_price)}</del>
+                <p class="nowPrice">NT$${new Intl.NumberFormat('en-IN').format(i.price)}</p>
+                </li>
+                `;
+        }
+    });
+    productWrap.innerHTML = str;
+})
 
 //取得購物車列表
 function getCartList() {
@@ -167,24 +196,26 @@ function getCartList() {
         })
 }
 
+
+
 renderProductList();
 getCartList();
 
 // 新增資料
 // - 加入購物車
-function addToCart(productId, quantity){
-    axios.post( `${api_url}/${api_path}/carts`, {
+function addToCart(productId, quantity) {
+    axios.post(`${api_url}/${api_path}/carts`, {
         "data": {
             "productId": productId,
             "quantity": 1
         }
-      })
-      .then(function (res) {
-        console.log(res.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    })
+        .then(function (res) {
+            console.log(res.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 
 // 刪除資料
