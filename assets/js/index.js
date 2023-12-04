@@ -1,5 +1,7 @@
 // 連接 html 框架
-
+const api_url = "https://livejs-api.hexschool.io/api/livejs/v1/customer";
+const api_path = "rxzan";
+const token = "qBHJXrpBrwdkIMnsz1kD5HcDZrB3";
 // - 產品列表
 const productSelect = document.querySelector(".productSelect"); //下拉篩選
 const productWrap = document.querySelector(".productWrap"); // 渲染商品外層
@@ -12,6 +14,14 @@ const discardAllBtn = document.querySelector(".discardAllBtn"); // 刪除所有�
 
 // - 填寫預訂資料
 const orderInfoInputWrap = document.querySelectorAll(".orderInfo-inputWrap"); // 所有表單填寫內容
+
+// -- for KATA --
+
+// -- end for KATA --
+
+
+
+
 
 
 // 連接 api 資料
@@ -75,9 +85,8 @@ function sendBuyOrder() {
 }
 
 // 渲染 html 內容
-const api_url = "https://livejs-api.hexschool.io/api/livejs/v1/customer";
-const api_path = "rxzan";
-const token = "qBHJXrpBrwdkIMnsz1kD5HcDZrB3";
+
+
 
 
 // 渲染產品列表
