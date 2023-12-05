@@ -6,6 +6,7 @@ const productList = document.querySelector('.productWrap');
 const productSelect = document.querySelector('.productSelect');
 const cartList = document.querySelector('.shoppingCart-tableList');
 
+
 let productData = [];
 let cartData = [];
 
@@ -63,7 +64,7 @@ function combineProductHTMLItem(item){
     src="${item.images}"
     alt=""
     />
-    <a href="#" class="addCardBtn" data-id="${item.id}">加入購物車</a>
+    <a href="#" class="addCardBtn" data-id="${item.id}" data-product="${item.title}">加入購物車</a>
     <h3>${item.title}</h3>
     <del class="originPrice">NT$${new Intl.NumberFormat('en-IN').format(item.origin_price)}</del>
     <p class="nowPrice">NT$${new Intl.NumberFormat('en-IN').format(item.price)}</p>
@@ -95,7 +96,8 @@ productList.addEventListener('click',(e)=>{
         }
     })
     .then(function (res) {
-        alert("已加入購物車");
+        const cartProductName = e.target.getAttribute('data-product');
+        alert(`"${cartProductName}" 已加入購物車`);
         getCartList();
     })
     .catch(function (error) {
@@ -135,6 +137,7 @@ function getCartList() {
         })
 }
 
+// 刪除特定筆購物車商品
 cartList.addEventListener('click',(e)=>{
     e.preventDefault();
     const cartId = e.target.getAttribute('data-id');
@@ -152,6 +155,7 @@ cartList.addEventListener('click',(e)=>{
     })
 });
 
+// 刪除所有購物車內容
 const discardAllBtn = document.querySelector('.discardAllBtn');
 discardAllBtn.addEventListener('click',(e)=>{
     e.preventDefault();
@@ -165,3 +169,50 @@ discardAllBtn.addEventListener('click',(e)=>{
     })
 });
 // 記錄點︰90分鐘
+
+
+//送出訂單
+const orderInfoBtn = document.querySelector('.orderInfo-btn');
+orderInfoBtn.addEventListener('click',(e)=>{
+    e.preventDefault();
+    //1. 購物車中要有品項
+    if(cartData.length == 0){
+        alert('訂單送出失敗：購物車中沒有任何商品');
+        return;
+    };
+    //2. 資料須填寫完整
+    const customerName = document.querySelector('#customerName').value;
+    const customerPhone = document.querySelector('#customerPhone').value;
+    const customerEmail = document.querySelector('#customerEmail').value;
+    const customerAddress = document.querySelector('#customerAddress').value;
+    const tradeWay = document.querySelector('#tradeWay').value;
+    if(customerName=="" || customerPhone=="" || customerEmail=="" || customerAddress=="" || tradeWay=="" ){
+        alert('還有資料未填寫');
+        return;
+    }
+    axios.post(`${api_url}/${api_path}/orders`, {
+        "data": {
+            "user": {
+                "name": customerName,
+                "tel": customerPhone,
+                "email": customerEmail,
+                "address": customerAddress,
+                "payment": tradeWay
+            }
+        }
+    })
+    .then(function (res) {
+        alert('成功送出訂單');
+        document.querySelector('#customerName').value = "";
+        document.querySelector('#customerPhone').value = "";
+        document.querySelector('#customerEmail').value = "";
+        document.querySelector('#customerAddress').value = "";
+        document.querySelector('#tradeWay').value = "ATM";
+        getCartList();
+    })
+    .catch(function (error) {
+        console.log(error.response.data);
+    })
+});
+
+//建議前後台加總 8 小時內完成
