@@ -66,8 +66,8 @@ function combineProductHTMLItem(item){
     />
     <a href="#" class="addCardBtn" data-id="${item.id}" data-product="${item.title}">加入購物車</a>
     <h3>${item.title}</h3>
-    <del class="originPrice">NT$ ${new Intl.NumberFormat('en-IN').format(item.origin_price)}</del>
-    <p class="nowPrice">NT$ ${new Intl.NumberFormat('en-IN').format(item.price)}</p>
+    <del class="originPrice">NT$${new Intl.NumberFormat('en-IN').format(item.origin_price)}</del>
+    <p class="nowPrice">NT$${new Intl.NumberFormat('en-IN').format(item.price)}</p>
     </li>
     `;
 }

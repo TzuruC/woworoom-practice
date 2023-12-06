@@ -2,29 +2,8 @@ const api_url = "https://livejs-api.hexschool.io/api/livejs/v1/admin";
 const api_path = "rxzan";
 const token = "qBHJXrpBrwdkIMnsz1kD5HcDZrB3";
 
-
-//  - C3 表格
-let chart = c3.generate({
-    bindto: '#chart', // HTML 元素綁定
-    data: {
-        type: "pie",
-        columns: [
-            ['Louvre 雙人床架', 1],
-            ['Antony 雙人床架', 2],
-            ['Anty 雙人床架', 3],
-            ['其他', 4],
-        ],
-        colors: {
-            "Louvre 雙人床架": "#DACBFF",
-            "Antony 雙人床架": "#9D7FEA",
-            "Anty 雙人床架": "#5434A7",
-            "其他": "#301E5F",
-        }
-    },
-});
-
-let orderData = [];
 const orderList = document.querySelector(".js-orderList");
+let orderData = [];
 
 
 function init(){
@@ -32,6 +11,36 @@ function init(){
 }
 init(); // 畫面初始化
 
+function renderC3(){
+    //物件資料蒐集
+    let total = {};
+    orderData.forEach((item)=>{
+        item.products.forEach((productItem)=>{
+            if(total[productItem.category] == undefined){
+                total[productItem.category] = productItem.price*productItem.quantity;
+            }else{
+                total[productItem.category] += productItem.price*productItem.quantity;
+            }
+        });
+    });
+    let categoryAry = Object.keys(total);
+    let newData = [];
+    categoryAry.forEach((item)=>{
+        let ary= [];
+        ary.push(item);
+        ary.push(total[item]);
+        newData.push(ary);
+    });
+
+//  - C3 表格
+let chart = c3.generate({
+    bindto: '#chart', // HTML 元素綁定
+    data: {
+        type: "pie",
+        columns: newData,        
+    },
+});
+}
 
 // 取得訂單列表
 function getOrderList() {
@@ -65,7 +74,7 @@ function getOrderList() {
                 <td>
                 ${productStr}
                 </td>
-                <td>${transDate(item.updatedAt)}</td>
+                <td>${transDate(item.createdAt)}</td>
                 <td class="js-orderStatus">
                     <a href="#" class="orderStatus" data-id="${item.id}" data-status="${orderStatus}"> ${orderStatus} </a>
                 </td>
@@ -75,6 +84,7 @@ function getOrderList() {
                 </tr>`;
             });
             orderList.innerHTML = str;
+            renderC3();
         })
         .catch(function (error) {
             console.log(error.response.data);
@@ -85,15 +95,18 @@ function getOrderList() {
 orderList.addEventListener('click', (e)=>{
     e.preventDefault();
     const targetClass = e.target.getAttribute("class");
+    let id = e.target.getAttribute("data-id");
+
     // 刪除按鈕
     if(targetClass == "delSingleOrder-Btn js-orderDelete"){
-        console.log("刪除按鈕");;
+        deleteOrderItem(id);
+        return;
     }
     // 訂單狀態按鈕
     if(targetClass == "orderStatus"){
         let status = e.target.getAttribute("data-status")
-        let id = e.target.getAttribute("data-id");
-        changeOrderStatus(status,id)
+        changeOrderStatus(status,id);
+        return;
     }
 });
 
@@ -120,24 +133,23 @@ function changeOrderStatus(status,id){
     })
 }
 
-// function deleteOrderItem(status,id){
-//     console.log(status,id);
-//     axios.delete(`${api_url}/${api_path}/orders/${id}`, {
-//         headers: {
-//             "authorization": token
-//         }
-//     })
-//     .then(function (res) {
-//         alert("刪除成功");
-//         getOrderList();
-//     })
-// }
+function deleteOrderItem(id){
+    axios.delete(`${api_url}/${api_path}/orders/${id}`, {
+        headers: {
+            "authorization": token
+        }
+    })
+    .then(function (res) {
+        alert("刪除成功");
+        getOrderList();
+    })
+}
 
 
 
 // 將時間戳轉為 年/月/日
 function transDate(timeStamp) {
-    // 秒轉毫秒
+    // 秒轉毫秒 new Date(13碼)
     const msecTime = timeStamp * 1000;
     const date = new Date(msecTime);
     // 擷取日期
@@ -148,3 +160,18 @@ function transDate(timeStamp) {
     const dateFormatted = `${year}/${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}`;
     return dateFormatted;
 }
+
+
+const discardAllBtn = document.querySelector('.discardAllBtn');
+discardAllBtn.addEventListener('click',(e)=>{
+    e.preventDefault();
+    axios.delete(`${api_url}/${api_path}/orders`, {
+        headers: {
+            "authorization": token
+        }
+    })
+    .then(function (res) {
+        alert("正在執行毀滅式刪除...");
+        getOrderList();
+    })
+});
