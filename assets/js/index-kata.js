@@ -190,8 +190,10 @@ orderInfoBtn.addEventListener('click', (e) => {
         alert('還有資料未填寫');
         return;
     }
-
-    alertEmailError(customerEmail);
+    if (validateEmail(customerEmail)==false){
+        alert("請填寫正確的Email");
+        return;
+      }
     axios.post(`${api_url}/${api_path}/orders`, {
         "data": {
             "user": {
@@ -291,13 +293,6 @@ function validateEmail(mail) {
         return true
     }
     return false;
-}
-function alertEmailError() {
-
-    if (!validateEmail(customerEmail)) {
-        alert('email 格式有誤！');
-        return;
-    }
 }
 function validatePhone(phone) {
     if (/^[09]{2}\d{8}$/.test(phone)) {
