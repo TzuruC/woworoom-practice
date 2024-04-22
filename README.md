@@ -1,8 +1,8 @@
 # 關於 WOWOROOM practice
-本專案作為切版練習用途
+本專案目標為 JavaScript 功能套件練習用途
 
 # 使用技術
-#React #vite #Bootstrap
+#JavaScript #vite #Bootstrap #c3.js
 
 # 環境版本
 Node - v18  
