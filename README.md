@@ -19,6 +19,3 @@ Vite - v4
   - layout # ejs 模板放置處
   - pages # 頁面放置處
 
-
-Copyright © Tzuru Chen 2024  
-Email: tzuruc@gmail.com
